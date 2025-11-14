@@ -1,0 +1,24 @@
+    if start_time <= current_time <= end_time:
+        print("Working hours")
+        with open(hosts_path, "r+") as file:
+            content = file.read()
+            for website in website_list:
+                if website not in content:
+                    file.write(ip_localmachine + " " + website + "\n")
+    else:
+        print("Non-working hours")
+        with open(hosts_path, "r+") as file:
+            content = file.readlines()
+            file.seek(0)
+            for line in content:
+                # Only write back lines that don't contain blocked websites
+                if not any(website in line for website in website_list):
+                    file.write(line)
+            # Truncate the file to remove the unwanted lines at the end
+            file.truncate()
+    
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+# Sleep for a while before checking again
+time.sleep(10)
